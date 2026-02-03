@@ -76,11 +76,8 @@ docker run --rm \
   -v "${PROJECT_NAME}_db-data:/backup/raw_db_files:ro" \
   -v "${PROJECT_NAME}_config:/backup/config:ro" \
   restic/restic \
-  backup /backup \
-    --tag "daily-backup" \
-    --tag "$PROJECT_NAME" \
-    --host "$PROJECT_NAME"
-
+  sh -c "cp /ssh/* /root/.ssh/ && restic backup /backup --tag \"daily-backup\" --tag \"$PROJECT_NAME\" --host \"$PROJECT_NAME\""
+  
 # 6. Pruning
 # ----------------
 echo ">>> Pruning old backups..."
