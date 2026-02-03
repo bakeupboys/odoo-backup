@@ -73,13 +73,17 @@ echo ">>> Pushing to Remote via Restic..."
 # Note: We use the discovered PROJECT_NAME to find the volumes
 docker run --rm \
   --env-file "$CONFIG_FILE" \
-  -v "$HOME/.ssh:/root/.ssh:ro" \
+  -e SSH_COMMAND="ssh -F /ssh/config -o StrictHostKeyChecking=accept-new" \
+  -v "$HOME/.ssh:/ssh:ro" \
   -v "$BACKUP_TEMP_DIR:/backup/db" \
   -v "${PROJECT_NAME}_odoo-data:/backup/filestore:ro" \
   -v "${PROJECT_NAME}_db-data:/backup/raw_db_files:ro" \
   -v "${PROJECT_NAME}_config:/backup/config:ro" \
   restic/restic \
-  backup /backup --tag "daily-backup" --tag "$PROJECT_NAME" --host "$PROJECT_NAME"
+  backup /backup \
+    --tag "daily-backup" \
+    --tag "$PROJECT_NAME" \
+    --host "$PROJECT_NAME"
 
 # 6. Pruning
 # ----------------
