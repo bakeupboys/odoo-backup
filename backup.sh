@@ -77,7 +77,7 @@ docker run --rm \
   -v "${PROJECT_NAME}_config:/backup/config:ro" \
   --entrypoint sh \
   restic/restic \
-  -c "cp /ssh/* /root/.ssh/ && restic backup /backup --tag \"daily-backup\" --tag \"$PROJECT_NAME\" --host \"$PROJECT_NAME\""
+  -c "cp /ssh/* ~/.ssh/ && restic backup /backup --tag \"daily-backup\" --tag \"$PROJECT_NAME\" --host \"$PROJECT_NAME\""
 
 # 6. Pruning
 # ----------------
@@ -85,8 +85,9 @@ echo ">>> Pruning old backups..."
 docker run --rm \
   --env-file "$CONFIG_FILE" \
   -v "$HOME/.ssh:/root/.ssh:ro" \
+  --entrypoint sh \
   restic/restic \
-  forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --prune
+  -c "cp /ssh/* ~/.ssh/ && restic forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --prune"
 
 # 7. Cleanup
 # ----------------
