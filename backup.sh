@@ -73,7 +73,7 @@ echo ">>> Pushing to Remote via Restic..."
 # Note: We use the discovered PROJECT_NAME to find the volumes
 docker run --rm \
   --env-file "$CONFIG_FILE" \
-  -e SSH_COMMAND="ssh -F /ssh/config -o StrictHostKeyChecking=accept-new" \
+  -e SSH_COMMAND="ssh -F /ssh/config -o StrictHostKeyChecking=accept-new -i $SSH_IDENTITY_FILE" \
   -v "$HOME/.ssh:/ssh:ro" \
   -v "$BACKUP_TEMP_DIR:/backup/db" \
   -v "${PROJECT_NAME}_odoo-data:/backup/filestore:ro" \
