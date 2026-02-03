@@ -84,7 +84,7 @@ docker run --rm \
 echo ">>> Pruning old backups..."
 docker run --rm \
   --env-file "$CONFIG_FILE" \
-  -v "$HOME/.ssh:/root/.ssh:ro" \
+  -v "$HOME/.ssh:/ssh:ro" \
   --entrypoint sh \
   restic/restic \
   -c "mkdir -p ~/.ssh && cp /ssh/* ~/.ssh/ && restic forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --prune"
