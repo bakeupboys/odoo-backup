@@ -75,9 +75,10 @@ docker run --rm \
   -v "${PROJECT_NAME}_odoo-data:/backup/filestore:ro" \
   -v "${PROJECT_NAME}_db-data:/backup/raw_db_files:ro" \
   -v "${PROJECT_NAME}_config:/backup/config:ro" \
+  --entrypoint sh \
   restic/restic \
-  sh -c "cp /ssh/* /root/.ssh/ && restic backup /backup --tag \"daily-backup\" --tag \"$PROJECT_NAME\" --host \"$PROJECT_NAME\""
-  
+  -c "cp /ssh/* /root/.ssh/ && restic backup /backup --tag \"daily-backup\" --tag \"$PROJECT_NAME\" --host \"$PROJECT_NAME\""
+
 # 6. Pruning
 # ----------------
 echo ">>> Pruning old backups..."
