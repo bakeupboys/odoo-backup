@@ -61,7 +61,7 @@ mkdir -p "$BACKUP_TEMP_DIR"
 # 4. Database Dump
 # ----------------
 echo ">>> Dumping Database from container $DB_CONTAINER_ID..."
-docker exec "$DB_CONTAINER_ID" pg_dump -U odoo -d postgres -Fc > "$BACKUP_TEMP_DIR/odoo_db.dump"
+docker exec "$DB_CONTAINER_ID" pg_dump -U odoo -d "$PROJECT_NAME" -Fc > "$BACKUP_TEMP_DIR/odoo_db.dump"
 
 # 5. Restic Backup
 # ----------------
@@ -74,7 +74,6 @@ docker run --rm \
   -v "$BACKUP_TEMP_DIR:/backup/db" \
   -v "${PROJECT_NAME}_odoo-data:/backup/filestore:ro" \
   -v "${PROJECT_NAME}_db-data:/backup/raw_db_files:ro" \
-  -v "${PROJECT_NAME}_config:/backup/config:ro" \
   --entrypoint sh \
   restic/restic \
   -c "mkdir -p ~/.ssh && cp /ssh/* ~/.ssh/ && restic backup /backup --tag \"daily-backup\" --tag \"$PROJECT_NAME\" --host \"$PROJECT_NAME\""
