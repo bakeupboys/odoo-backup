@@ -73,7 +73,6 @@ docker run --rm \
   -v "$HOME/.ssh:/ssh:ro" \
   -v "$BACKUP_TEMP_DIR:/backup/db" \
   -v "${PROJECT_NAME}_odoo-data:/backup/filestore:ro" \
-  -v "${PROJECT_NAME}_db-data:/backup/raw_db_files:ro" \
   --entrypoint sh \
   restic/restic \
   -c "mkdir -p ~/.ssh && cp /ssh/* ~/.ssh/ && restic backup /backup --tag \"daily-backup\" --tag \"$PROJECT_NAME\" --host \"$PROJECT_NAME\""
