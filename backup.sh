@@ -28,6 +28,9 @@ if [ ! -f "$CONFIG_FILE" ]; then
     exit 1
 fi
 
+source "$CONFIG_FILE"
+
+
 # 2. Dynamic Discovery
 # --------------------
 # We derive the project name from the directory name (Docker Compose default)
