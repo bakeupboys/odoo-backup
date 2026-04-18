@@ -34,9 +34,11 @@ source "$CONFIG_FILE"
 # 2. Dynamic Discovery
 # --------------------
 # We derive the project name from the directory name (Docker Compose default)
-# Or you can override it in .env.backup with COMPOSE_PROJECT_NAME
-PROJECT_NAME=${COMPOSE_PROJECT_NAME:-$(basename "$TARGET_DIR")}
+# you can set an alternative DB Name in  .env.backup with COMPOSE_DB_NAME
+PROJECT_NAME=$(basename "$TARGET_DIR")
 PROJECT_NAME=$(echo "$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9_-')
+
+DB_NAME=${COMPOSE_DB_NAME:-$PROJECT_NAME}
 
 # Dynamically find the running DB container ID
 # We assume the service name in docker-compose is 'db'. Change if yours is different.
@@ -53,6 +55,7 @@ BACKUP_TEMP_DIR="$TARGET_DIR/backups_temp"
 
 echo "=========================================="
 echo "Starting Backup for: $PROJECT_NAME"
+echo "DB Name: $DB_NAME"
 echo "Directory: $TARGET_DIR"
 echo "Timestamp: $TIMESTAMP"
 echo "=========================================="
@@ -64,7 +67,7 @@ mkdir -p "$BACKUP_TEMP_DIR"
 # 4. Database Dump
 # ----------------
 echo ">>> Dumping Database from container $DB_CONTAINER_ID..."
-docker exec "$DB_CONTAINER_ID" pg_dump -U odoo -d "$PROJECT_NAME" -Fc > "$BACKUP_TEMP_DIR/odoo_db.dump"
+docker exec "$DB_CONTAINER_ID" pg_dump -U odoo -d "$DB_NAME" -Fc > "$BACKUP_TEMP_DIR/odoo_db.dump"
 
 # 5. Restic Backup
 # ----------------
